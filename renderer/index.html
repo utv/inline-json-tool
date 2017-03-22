@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Electron App</title>
-    <link rel="stylesheet" href="../index.css">
+    <link rel="stylesheet" href="./style.css">
     <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
 </head>
 
@@ -13,34 +13,23 @@
     <div class="container">
         <div class="row">
             <div class="col-xs-10 col-xs-offset-1 col-md-10 col-md-offset-1">
-                <section>
-                    <ul class="list-inline">
-                        <li><button class="dir-chooser btn btn-default form-control">Select Directory</button></li>
-                        <li><strong>rendered as bold text</strong></li>
-                    </ul>
-                    <ul class="list-inline">
-                        <li><label for="">Application:</label></li>
-                        <li><strong id="app-name"></strong></li>
-                    </ul>
-                    <label for="">File Type</label>
-                    <select class="file-type form-control"></select>
-                    <section class="task">
-                        <label for="">Choose File</label>
-                        <select class="file-list form-control"></select>
-                        <label for="">Choose Fields</label>
-                        <table class="file-content table">
-                            <thead id="table-head">
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Key</th>
-                                    <th>Value</th>
-                                </tr>
-                            </thead>
-                            <tbody id="content">
-                            </tbody>
-                        </table>
-                    </section>
-                </section>
+                <ul class="list-inline">
+                    <li><button class="file-chooser btn btn-default form-control">Select File</button></li>
+                    <li><strong>rendered as bold text</strong></li>
+                </ul>
+                <table class="file-content table">
+                    <thead id="table-head">
+                        <tr class="navigate"><a href="" class="file-name-link"></a></tr>
+                        <tr>
+                            <th>Choose</th>
+                            <th>Name</th>
+                            <th>Key</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody id="content">
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

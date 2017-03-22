@@ -13,7 +13,7 @@
     "bootstrap": "^3.3.7",
     "eslint": "^3.17.1",
     "findit": "^2.0.0",
-    "xmlbuilder": "^8.2.2"
+    "xml2js": "^0.4.17"
   },
   "devDependencies": {
     "electron-prebuilt-compile": "^1.4.15",
