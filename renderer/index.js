@@ -121,7 +121,7 @@ function removeField(inlinejson) {
     }
 
     let fields = getValue(json, 'Field')
-    if (fields.length == 1) {
+    if (fields.length === 1) {
       fs.writeFileSync(outputFile, '')
       return
     }
