@@ -155,10 +155,11 @@ function checkboxListener(event) {
 
 function linkListener(event) {
   event.preventDefault()
-  let data = event.target.data
+  let row = event.target.parentNode.parentNode
+
   clearCheckboxes()
   clearContent()
-  display(data)
+  display(row.data, row.inlinejson)
   highlight()
   // let link = document.createElement('a')
   // link.innerHTML = event.target.sourceName
@@ -196,8 +197,8 @@ function path2Key(key) {
   return traverse(fileNameLink.data, key, key)
 }
 
-function display(data) {
-  for (let node in data) {
+function display(data, parent = '') {
+  for (let key in data) {
     // display in format: [rename, key, value]
     // rename = key by default
 
@@ -206,16 +207,17 @@ function display(data) {
     let renameTd = document.createElement('td')
     let keyTd = document.createElement('td')
     let valTd = document.createElement('td')
-    renameTd.innerHTML = node
-    keyTd.innerHTML = node
+    renameTd.innerHTML = key
+    keyTd.innerHTML = key
+    row.data = data[key]
 
-    if (typeof data[node] === 'object') {
+    if (typeof data[key] === 'object') {
       let link = document.createElement('a')
       link.innerHTML = 'explore'
       // link.source = outputFile
       // link.sourceName = path.basename(outputFile)
-      link.key = node
-      link.data = data[node]
+      // link.key = key
+      // link.data = data[key]
       link.addEventListener('click', linkListener)
       chooseTd.appendChild(link)
       valTd.innerHTML = ''
@@ -223,13 +225,15 @@ function display(data) {
 
       let checkbox = document.createElement('input')
       checkbox.type = 'checkbox'
-      checkbox.value = node
+      // checkbox.value = key
       checkbox.addEventListener('click', checkboxListener)
       chooseTd.appendChild(checkbox)
-      valTd.innerHTML = data[node]
+      valTd.innerHTML = data[key]
     }
-    console.log(path2Key(node))
-    row.inlinejson = path2Key(node)
+
+    // row.inlinejson = path2Key(node)
+    if (parent !== '') row.inlinejson = parent + '/' + key
+    else row.inlinejson = key
     row.appendChild(chooseTd)
     row.appendChild(renameTd)
     row.appendChild(keyTd)
@@ -258,20 +262,40 @@ function highlight() {
       let rows = content.querySelectorAll('tr')
       for (let i = 0; i < rows.length; i++) {
         // let key = rows.item(i).getElementsByTagName('td')[2].innerHTML
-        let key = rows.item(i).inlinejson
+        let inlinejsonRow = rows.item(i).inlinejson
         for (let selectedKey in selectedKeys) {
           let checkbox = rows.item(i).getElementsByTagName('input')[0]
           if (checkbox === undefined) {
-            let pathSelectedKey = selectedKeys[selectedKey].substring(0, selectedKeys[selectedKey].lastIndexOf('/'))
-            if (key.indexOf('/') > -1 && key === pathSelectedKey) {
-              rows.item(i).classList.add('selected-row')
-              break
-            } else if (key === pathSelectedKey) {
-              rows.item(i).classList.add('selected-row')
-              break
+            let rowPathArr = inlinejsonRow.indexOf('/') > -1 ? inlinejsonRow.split('/') : [inlinejsonRow]
+            console.log(rowPathArr)
+            // if (inlinejsonRow.indexOf('/') > -1) {
+            //   rowPathArr = inlinejsonRow.split('/')
+            // } else {
+            //   rowPathArr = [inlinejsonRow]
+            // }
+
+            let selectedPathArr = selectedKeys[selectedKey].split('/')
+            let rowDepth = rowPathArr.length
+            let match = true
+            for (let depth = 0; depth <= rowDepth - 1; depth++) {
+              console.log(rowPathArr[depth])
+              if (selectedPathArr[depth] !== rowPathArr[depth]) {
+                match = false
+                break
+              }
             }
+            if (match) rows.item(i).classList.add('selected-row')
+
+            /*let pathSelectedKey = selectedKeys[selectedKey].substring(0, selectedKeys[selectedKey].lastIndexOf('/'))
+            if (inlinejsonRow.indexOf('/') > -1 && inlinejsonRow === pathSelectedKey) {
+              rows.item(i).classList.add('selected-row')
+              break
+            } else if (inlinejsonRow === pathSelectedKey) {
+              rows.item(i).classList.add('selected-row')
+              break
+            }*/
           }
-          else if (selectedKeys[selectedKey] === key) {
+          else if (selectedKeys[selectedKey] === inlinejsonRow) {
             rows.item(i).classList.add('selected-row')
             checkbox.checked = true
             break
