@@ -16,8 +16,8 @@ function clearCheckboxes() {
   // remove checkbox listener
   if (checkboxes.length > 0) {
     for (let i = 0; i < checkboxes.length; i++) {
-      console.log(checkboxes.item(i))
-      console.log(typeof checkboxes.item(i))
+      // console.log(checkboxes.item(i))
+      // console.log(typeof checkboxes.item(i))
       checkboxes.item(i).removeEventListener('click', checkboxListener)
     }
   }
@@ -38,8 +38,8 @@ function clearContent() {
 
 function clear() {
   clearCheckboxes()
-  clearFileNameLink()
   clearContent()
+  // clearFileNameLink()
   // remove link listener
 }
 
@@ -71,15 +71,15 @@ function updateOutputFile(json) {
   fs.writeFileSync(outputFile, xml)
 }
 
-function addRootNode(rename, key) {
+function addRootNode(rename, key, inlinejson) {
   let root = {
     'root': {
       'Field': {
         '$': {
-          InlineJSON: key,
+          InlineJSON: inlinejson,
           'Name': rename
         },
-        '_': key
+        '_': 'KEY'
       }
     }
   }
@@ -95,11 +95,11 @@ function addField(rename, key, inlinejson) {
     }
 
     if (json === null) {
-      addRootNode(rename, key)
-      console.log(json)
+      addRootNode(rename, key, inlinejson)
+      // console.log(json)
     } else {
       let fields = getValue(json, 'Field')
-      console.log(fields)
+      // console.log(fields)
       fields.push({
         '$': {
           InlineJSON: inlinejson,
@@ -142,22 +142,23 @@ function checkboxListener(event) {
     removeField(inlinejson)
     event.target.checked = false
     event.target.parentNode.parentNode.classList.remove('selected-row')
-    return
+  } else {
+    let row = event.target.parentNode.parentNode
+    let rename = row.children[1].innerHTML
+    let key = row.children[2].innerHTML
+    let inlinejson = row.inlinejson
+    console.log('inlinejson = ' + inlinejson)
+    addField(rename, key, inlinejson)
+    event.target.parentNode.parentNode.classList.add('selected-row')
   }
-
-  let row = event.target.parentNode.parentNode
-  let rename = row.children[1].innerHTML
-  let key = row.children[2].innerHTML
-  let inlinejson = row.inlinejson
-  addField(rename, key, inlinejson)
-  event.target.parentNode.parentNode.classList.add('selected-row')
 }
 
 function linkListener(event) {
   event.preventDefault()
+  let data = event.target.data
   clearCheckboxes()
   clearContent()
-  display(event.target.data)
+  display(data)
   highlight()
   // let link = document.createElement('a')
   // link.innerHTML = event.target.sourceName
@@ -169,7 +170,7 @@ function fileNameLinkListener(event) {
 
   clearCheckboxes()
   clearContent()
-  console.log(fileNameLink.data)
+  // console.log(fileNameLink.data)
   display(fileNameLink.data)
   highlight()
 }
@@ -251,7 +252,7 @@ function highlight() {
       selectedKeys.push(getValue(selected[node], 'InlineJSON'))
 
     }
-    console.log(selectedKeys)
+    // console.log(selectedKeys)
 
     if (content.childElementCount > 0) {
       let rows = content.querySelectorAll('tr')
@@ -300,7 +301,7 @@ fileChooser.addEventListener('click', (event) => {
     // fileNameLink.pathname = outputFile
     fileNameLink.data = data
     display(data)
-    highlight()
+    // highlight()
   })
 })
 
