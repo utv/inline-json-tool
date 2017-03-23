@@ -86,7 +86,12 @@ function addRootNode(rename, key, inlinejson) {
   updateOutputFile(root)
 }
 
+function capitalizeFirstLetter(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1)
+}
+
 function addField(rename, key, inlinejson) {
+  rename = capitalizeFirstLetter(rename)
   let output = fs.readFileSync(outputFile)
   xml2js.parseString(output, (err, json) => {
     if (err) {
