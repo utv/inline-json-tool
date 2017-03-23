@@ -251,62 +251,38 @@ function highlight() {
     let selected = getValue(json, 'Field')
     if (selected === null) return
     let selectedKeys = []
-    let parentKeys = []
     for (let node in selected) {
       selectedKeys.push(getValue(selected[node], 'InlineJSON'))
 
     }
-    // console.log(selectedKeys)
 
     if (content.childElementCount > 0) {
       let rows = content.querySelectorAll('tr')
       for (let i = 0; i < rows.length; i++) {
-        // let key = rows.item(i).getElementsByTagName('td')[2].innerHTML
         let inlinejsonRow = rows.item(i).inlinejson
         for (let selectedKey in selectedKeys) {
           let checkbox = rows.item(i).getElementsByTagName('input')[0]
           if (checkbox === undefined) {
+            // row with no checkbox
             let rowPathArr = inlinejsonRow.indexOf('/') > -1 ? inlinejsonRow.split('/') : [inlinejsonRow]
-            console.log(rowPathArr)
-            // if (inlinejsonRow.indexOf('/') > -1) {
-            //   rowPathArr = inlinejsonRow.split('/')
-            // } else {
-            //   rowPathArr = [inlinejsonRow]
-            // }
-
             let selectedPathArr = selectedKeys[selectedKey].split('/')
             let rowDepth = rowPathArr.length
             let match = true
             for (let depth = 0; depth <= rowDepth - 1; depth++) {
-              console.log(rowPathArr[depth])
               if (selectedPathArr[depth] !== rowPathArr[depth]) {
                 match = false
                 break
               }
             }
             if (match) rows.item(i).classList.add('selected-row')
-
-            /*let pathSelectedKey = selectedKeys[selectedKey].substring(0, selectedKeys[selectedKey].lastIndexOf('/'))
-            if (inlinejsonRow.indexOf('/') > -1 && inlinejsonRow === pathSelectedKey) {
-              rows.item(i).classList.add('selected-row')
-              break
-            } else if (inlinejsonRow === pathSelectedKey) {
-              rows.item(i).classList.add('selected-row')
-              break
-            }*/
           }
           else if (selectedKeys[selectedKey] === inlinejsonRow) {
+            // row with checkbox
             rows.item(i).classList.add('selected-row')
             checkbox.checked = true
             break
           }
         }
-
-        // if (selectedKeys.indexOf(key) !== -1) {
-        //   rows.item(i).classList.add('selected-row')
-        //   let checkbox = rows.item(i).getElementsByTagName('input')[0]
-        //   checkbox.checked = true
-        // }
       }
     }
   })
